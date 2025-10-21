@@ -84,13 +84,67 @@ The app will open in your browser at `http://localhost:8501`
 
 ### Using the App
 
-1. Enter your one-line story idea in the text area
-2. Click "Generate Screenplay"
-3. Wait for the AI agents to create your masterpiece (typically 30-90 seconds)
-4. View the results in two tabs:
+The app supports **three ways** to provide your API key:
+
+1. **Streamlit Secrets** (recommended for cloud deployment)
+2. **Environment Variable** (.env file for local development)
+3. **User Input** (enter your key in the sidebar when using the app)
+
+If no API key is configured via secrets or .env, the app will prompt you to enter one in the sidebar.
+
+**Basic Usage:**
+1. Enter your Google AI API key (if not already configured)
+2. Enter your one-line story idea in the text area
+3. Click "Generate Screenplay"
+4. Wait for the AI agents to create your masterpiece (typically 30-90 seconds)
+5. View the results in two tabs:
    - **Story & Review**: The emotionally rich story with detailed creative analysis
    - **Screenplay**: The beautifully formatted 5-minute script
-5. Download your screenplay as .txt or .fountain
+6. Download your screenplay as .txt or .fountain
+
+## Deployment to Streamlit Cloud
+
+Want to deploy this app publicly without exposing your API key? Here's how:
+
+### 1. Fork/Clone the Repository
+
+```bash
+git clone https://github.com/Thanirex/FilmScriptGenerator-In-Seconds.git
+cd FilmScriptGenerator-In-Seconds
+```
+
+### 2. Deploy to Streamlit Cloud
+
+1. Go to [share.streamlit.io](https://share.streamlit.io/)
+2. Sign in with GitHub
+3. Click "New app"
+4. Select your repository: `FilmScriptGenerator-In-Seconds`
+5. Set main file path: `app.py`
+6. Click "Advanced settings"
+
+### 3. Configure Secrets
+
+In the **Secrets** section, add:
+
+```toml
+[google]
+api_key = "your_actual_google_api_key_here"
+```
+
+Get your FREE API key from: https://aistudio.google.com/apikey
+
+### 4. Deploy!
+
+Click "Deploy" and your app will be live in minutes!
+
+Your API key is securely stored in Streamlit's secrets management and will never be exposed to users.
+
+### Alternative: User-Provided API Keys
+
+If you don't want to configure secrets, users can enter their own API keys:
+- The app will show an input field in the sidebar
+- Keys are only stored in the session and never persisted
+- Perfect for public demos or educational use
 
 ### Example Prompts
 
@@ -106,13 +160,16 @@ The app will open in your browser at `http://localhost:8501`
 
 ```
 Filmscriptgen/
-├── app.py              # Main Streamlit application with enhanced prompts
-├── main.py             # Original entry point (legacy)
-├── .env.example        # Environment variable template
-├── .gitignore          # Git ignore rules
-├── pyproject.toml      # Project dependencies
-├── requirements.txt    # Pip requirements
-└── README.md           # This file
+├── .streamlit/
+│   ├── config.toml           # Streamlit theme configuration
+│   └── secrets.toml.example  # Secrets template for deployment
+├── app.py                    # Main Streamlit application
+├── main.py                   # Original entry point (legacy)
+├── .env.example              # Environment variable template
+├── .gitignore                # Git ignore rules
+├── pyproject.toml            # Project dependencies
+├── requirements.txt          # Pip requirements
+└── README.md                 # This file
 ```
 
 ## Technical Details

@@ -17,17 +17,31 @@ st.set_page_config(
 
 # Initialize the Gemini model
 @st.cache_resource
-def get_llm():
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        st.error("⚠️ GOOGLE_API_KEY not found in environment variables!")
-        st.stop()
+def get_llm(_api_key):
+    """Initialize Gemini model with provided API key"""
     return ChatGoogleGenerativeAI(
         model="gemini-2.0-flash-exp",  # or "gemini-1.5-pro" for even better quality
-        google_api_key=api_key,
+        google_api_key=_api_key,
         temperature=0.9,  # Higher creativity for emotional storytelling
         max_output_tokens=8000
     )
+
+def get_api_key():
+    """Get API key from multiple sources in order of priority"""
+    # 1. Try Streamlit secrets (for cloud deployment)
+    try:
+        if "google" in st.secrets and "api_key" in st.secrets["google"]:
+            return st.secrets["google"]["api_key"]
+    except:
+        pass
+
+    # 2. Try environment variable (for local .env)
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if api_key:
+        return api_key
+
+    # 3. Return None - will prompt user to enter
+    return None
 
 # Master prompt template - Enhanced for emotional, cinematic storytelling
 MASTER_PROMPT = """You are an AWARD-WINNING screenwriter and master storyteller with expertise in crafting deeply emotional, visually stunning short films. Your work has been compared to Denis Villeneuve, Damien Chazelle, and Greta Gerwig. You understand the profound power of subtext, visual metaphor, and silence.
@@ -238,6 +252,41 @@ def main():
 
     # Sidebar
     with st.sidebar:
+        st.header("🔑 API Configuration")
+
+        # Get API key from environment/secrets or user input
+        stored_api_key = get_api_key()
+
+        if stored_api_key:
+            st.success("✅ API key loaded from secrets/environment")
+            api_key = stored_api_key
+            st.caption("Using configured Google AI API key")
+        else:
+            st.info("🔐 Enter your Google AI API key to get started")
+            api_key = st.text_input(
+                "Google AI API Key",
+                type="password",
+                help="Get your FREE API key from https://aistudio.google.com/apikey"
+            )
+            if api_key:
+                st.success("✅ API key provided!")
+            else:
+                st.warning("⚠️ Please enter your API key above to generate screenplays")
+
+            st.markdown("---")
+            st.markdown("""
+            **Don't have an API key?**
+
+            Get one for FREE:
+            1. Visit [Google AI Studio](https://aistudio.google.com/apikey)
+            2. Click "Create API Key"
+            3. Copy and paste it above
+
+            Your key is never stored and only used for this session.
+            """)
+
+        st.markdown("---")
+
         st.header("About")
         st.markdown("""
         This app uses a **two-agent AI pipeline** powered by cinematic storytelling principles to create emotionally resonant 5-minute screenplays.
@@ -287,7 +336,11 @@ def main():
             st.warning("⚠️ Please enter a story idea first!")
             return
 
-        llm = get_llm()
+        if not api_key:
+            st.error("⚠️ Please enter your Google AI API key in the sidebar to generate screenplays!")
+            return
+
+        llm = get_llm(api_key)
 
         with st.spinner("🎭 Agent A is crafting your story..."):
             result = generate_screenplay(user_prompt, llm)
