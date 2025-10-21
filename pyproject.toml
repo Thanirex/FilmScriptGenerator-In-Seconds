@@ -1,0 +1,13 @@
+[project]
+name = "filmscriptgen"
+version = "0.1.0"
+description = "AI-powered 5-minute screenplay generator using LangChain and Claude"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit>=1.28.0",
+    "langchain>=0.1.0",
+    "langchain-google-genai>=0.0.5",
+    "python-dotenv>=1.0.0",
+    "google-generativeai>=0.3.0",
+]
