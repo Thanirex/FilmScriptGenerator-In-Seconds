@@ -308,7 +308,7 @@ MIT License - feel free to use this project for any purpose.
 - Built with [LangChain](https://www.langchain.com/)
 - UI by [Streamlit](https://streamlit.io/)
 
-Inspired by the cinematic storytelling of Denis Villeneuve, Damien Chazelle, Greta Gerwig, Christopher Nolan, and other master filmmakers.
+Inspired by the cinematic storytelling of Wang Kar Wai, Rajamouli, Ritesh Rana, Christopher Nolan, and other master filmmakers.
 
 ---
 
